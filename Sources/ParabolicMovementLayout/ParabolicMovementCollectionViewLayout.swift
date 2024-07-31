@@ -13,13 +13,15 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
 
     private typealias CardPositionModel = (index: Int, normalizedContentOffset: CGFloat, realPosition: CGFloat)
 
-    // MARK: Internal properties
+    // MARK: Public properties
 
+    @IBInspectable private(set) public var startVelocity: CGFloat = .zero
     @IBInspectable private(set) public var startPosition: CGFloat = .zero
-    @IBInspectable private(set) public var amountOfCardsFromStartToTop: CGFloat = .zero
-    @IBInspectable private(set) public var cardStandardSize: CGSize = .zero
 
-    @IBInspectable public var disappearanceTopCardOffset: CGFloat = .zero
+    @IBInspectable private(set) public var amountOfCardsFromStartToTop: CGFloat = .zero
+    @IBInspectable private(set) public var disappearanceTopCardOffset: CGFloat = .zero
+
+    @IBInspectable private(set) public var cardStandardSize: CGSize = .zero
 
     public override var collectionViewContentSize: CGSize {
         guard
@@ -36,22 +38,31 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
 
     // MARK: Private properties
 
-    private var accelerationCoefficient: CGFloat = .zero
-    private var fullPathContentOffset: CGFloat = .zero
+    private var movementFunction: MovementFunction!
+
     private var contentOffsetBetweenCards: CGFloat = .zero
+    private var contentOffsetOfTopDisappearance: CGFloat = .zero
+    private var contentOffsetOfBottomDisappearance: CGFloat = .zero
 
     // MARK: Initialization
 
-    public init(startPosition: CGFloat, amountOfCardsFromStartToTop: CGFloat, cardStandardSize: CGSize) {
-        self.startPosition = startPosition
+    public init(
+        startVelocity: CGFloat,
+        startPosition: CGFloat,
+        amountOfCardsFromStartToTop: CGFloat,
+        disappearanceTopCardOffset: CGFloat,
+        cardStandardSize: CGSize
+    ) {
+        self.movementFunction = MovementFunction(startVelocity: startVelocity, startPosition: startPosition)
         self.amountOfCardsFromStartToTop = amountOfCardsFromStartToTop
+        self.disappearanceTopCardOffset = disappearanceTopCardOffset
         self.cardStandardSize = cardStandardSize
 
-        accelerationCoefficient = 1 / (4 * startPosition)
-        fullPathContentOffset = 2 * startPosition
-        contentOffsetBetweenCards = fullPathContentOffset / amountOfCardsFromStartToTop
-
         super.init()
+
+        contentOffsetBetweenCards = calculateContentOffsetBetweenCards()
+        contentOffsetOfTopDisappearance = calculateContentOffsetOfTopDisappearance()
+        contentOffsetOfBottomDisappearance = calculateContentOffsetOfBottomDisappearance()
     }
 
     public required init?(coder: NSCoder) {
@@ -62,9 +73,12 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
 
     public override func awakeFromNib() {
         super.awakeFromNib()
-        accelerationCoefficient = 1 / (4 * startPosition)
-        fullPathContentOffset = 2 * startPosition
-        contentOffsetBetweenCards = fullPathContentOffset / amountOfCardsFromStartToTop
+
+        movementFunction = MovementFunction(startVelocity: startVelocity, startPosition: startPosition)
+
+        contentOffsetBetweenCards = calculateContentOffsetBetweenCards()
+        contentOffsetOfTopDisappearance = calculateContentOffsetOfTopDisappearance()
+        contentOffsetOfBottomDisappearance = calculateContentOffsetOfBottomDisappearance()
     }
 
     public override func layoutAttributesForVisibleItems(contentOffset: CGPoint) -> [UICollectionViewLayoutAttributes] {
@@ -77,7 +91,7 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
 
         let mainCardIndex = Int(max(0, floor(contentOffset.y / contentOffsetBetweenCards)))
         let mainCardNormalizedContentOffset = normalizeContentOffset(contentOffset.y, forCardIndex: mainCardIndex)
-        let mainCardRealPosition = calculatePosition(normalizedContentOffset: mainCardNormalizedContentOffset)
+        let mainCardRealPosition = movementFunction.position(for: mainCardNormalizedContentOffset)
 
         var cardPositionModels: [CardPositionModel] = []
         if mainCardIndex < itemCount {
@@ -88,15 +102,10 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
             ))
         }
 
-        let contentOffsetAtOverlapping = fullPathContentOffset + contentOffsetBetweenCards / 2
-        let realPositionOfOverlapping = calculatePosition(normalizedContentOffset: contentOffsetAtOverlapping)
-        let realPositionOfDisappearance = realPositionOfOverlapping + disappearanceTopCardOffset
-        let (_, contentOffsetOfDisappearance) = contentOffsetForRealPosition(realPositionOfDisappearance)
-
         var currentCardIndex = mainCardIndex - 1
         var currentCardNormalizedContentOffset = mainCardNormalizedContentOffset + contentOffsetBetweenCards
-        while currentCardIndex >= 0 && currentCardNormalizedContentOffset < contentOffsetOfDisappearance {
-            let currentCardRealPosition = calculatePosition(normalizedContentOffset: currentCardNormalizedContentOffset)
+        while currentCardIndex >= 0 && currentCardNormalizedContentOffset < contentOffsetOfTopDisappearance {
+            let currentCardRealPosition = movementFunction.position(for: currentCardNormalizedContentOffset)
             if currentCardIndex < itemCount {
                 cardPositionModels.append((
                     index: currentCardIndex,
@@ -108,11 +117,10 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
             currentCardNormalizedContentOffset += contentOffsetBetweenCards
         }
 
-        let (contentOffsetAtBottomAppearance, _) = contentOffsetForRealPosition(collectionView.bounds.height)
         currentCardIndex = mainCardIndex + 1
         currentCardNormalizedContentOffset = mainCardNormalizedContentOffset - contentOffsetBetweenCards
-        while currentCardIndex < itemCount && currentCardNormalizedContentOffset > contentOffsetAtBottomAppearance {
-            let currentCardRealPosition = calculatePosition(normalizedContentOffset: currentCardNormalizedContentOffset)
+        while currentCardIndex < itemCount && currentCardNormalizedContentOffset > contentOffsetOfBottomDisappearance {
+            let currentCardRealPosition = movementFunction.position(for: currentCardNormalizedContentOffset)
             cardPositionModels.append((
                 index: currentCardIndex,
                 normalizedContentOffset: currentCardNormalizedContentOffset,
@@ -154,59 +162,26 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
         contentOffset - CGFloat(index) * contentOffsetBetweenCards
     }
 
-    private func calculatePosition(normalizedContentOffset x: CGFloat) -> CGFloat {
-        return
-            accelerationCoefficient * pow(x, 2)  // x^2
-            - x                                  // x^1
-            + startPosition                      // x^0
-    }
-
     private func calculateScale(normalizedContentOffset: CGFloat) -> CGFloat {
         1 - normalizedContentOffset / 2900
     }
 
-    /// This function solves the equation that defines movement.
-    ///
-    /// The equation is:
-    /// ```
-    /// AC * x^2 + SV * x + SP = RP, where
-    ///     AC is Acceleration Coeffecient (to be consice, acceleration coefficient is acceleration divided by 2,
-    ///         but real acceleration value is not important here),
-    ///     SV is Start Velocity (equals to -1, since real position decreases while contentOffset increases),
-    ///     IO is Index Offset (calculated using cardIndex)
-    ///     SP is Start Position,
-    ///     RP is Real Position, or y.
-    /// ```
-    ///
-    /// Applying some modifications:
-    /// ```
-    /// AC * x^2 - x + (SP - RP) = 0
-    /// ```
-    ///
-    /// Now we can solve equation with discriminant.
-    /// ```
-    /// Let DS = DiScriminant, then
-    /// DS = b^2 - 4 * a * c
-    ///
-    /// a = AC
-    /// b = -1
-    /// c = SP - RP
-    ///
-    /// DS = 1 - 4 * AC * (SP - RP)
-    /// ```
-    ///
-    private func contentOffsetForRealPosition(_ realPosition: CGFloat) -> (CGFloat, CGFloat) {
-        let discriminant = 1 - 4 * accelerationCoefficient * (startPosition - realPosition)
-        guard discriminant >= 0 else {
-            assertionFailure("Equation has no roots for provided realPosition (\(realPosition))!")
-            return (.zero, .zero)
-        }
-        let discriminantSqrt = discriminant.squareRoot()
+    private func calculateContentOffsetBetweenCards() -> CGFloat {
+        movementFunction.contentOffsetOfParabolaVertex / amountOfCardsFromStartToTop
+    }
 
-        let x1 = (1 - discriminantSqrt) / (2 * accelerationCoefficient)
-        let x2 = (1 + discriminantSqrt) / (2 * accelerationCoefficient)
+    private func calculateContentOffsetOfTopDisappearance() -> CGFloat {
+        let contentOffsetAtOverlapping = movementFunction.contentOffsetOfParabolaVertex + contentOffsetBetweenCards / 2
+        let positionOfOverlapping = movementFunction.position(for: contentOffsetAtOverlapping)
+        let positionOfDisappearance = positionOfOverlapping + disappearanceTopCardOffset
+        let (_, contentOffsetOfDisappearance) = movementFunction.contentOffsets(for: positionOfDisappearance)
+        return contentOffsetOfDisappearance
+    }
 
-        return (x1, x2)
+    private func calculateContentOffsetOfBottomDisappearance() -> CGFloat {
+        guard let collectionViewHeight = collectionView?.bounds.height else { return .zero }
+        let (contentOffsetAtBottomAppearance, _) = movementFunction.contentOffsets(for: collectionViewHeight)
+        return contentOffsetAtBottomAppearance
     }
 
 }
