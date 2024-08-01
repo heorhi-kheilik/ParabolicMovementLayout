@@ -22,6 +22,7 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
     @IBInspectable private(set) public var disappearanceTopItemOffset: CGFloat = .zero
 
     @IBInspectable private(set) public var itemStandardSize: CGSize = .zero
+    @IBInspectable private(set) public var scaleAtVertex: CGFloat = .zero
 
     public override var collectionViewContentSize: CGSize {
         guard
@@ -39,6 +40,7 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
     // MARK: Private properties
 
     private var movementFunction: MovementFunction!
+    private var scaleFunction: ScaleFunction!
 
     private var contentOffsetBetweenItems: CGFloat = .zero
     private var contentOffsetOfTopDisappearance: CGFloat = .zero
@@ -51,9 +53,18 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
         startPosition: CGFloat,
         amountOfItemsFromStartToTop: CGFloat,
         disappearanceTopItemOffset: CGFloat,
-        itemStandardSize: CGSize
+        itemStandardSize: CGSize,
+        scaleAtVertex: CGFloat
     ) {
-        self.movementFunction = MovementFunction(startVelocity: startVelocity, startPosition: startPosition)
+        movementFunction = MovementFunction(
+            startVelocity: startVelocity,
+            startPosition: startPosition
+        )
+        scaleFunction = ScaleFunction(
+            contentOffsetOfParabolaVertex: movementFunction.contentOffsetOfParabolaVertex,
+            scaleAtVertex: scaleAtVertex
+        )
+
         self.amountOfItemsFromStartToTop = amountOfItemsFromStartToTop
         self.disappearanceTopItemOffset = disappearanceTopItemOffset
         self.itemStandardSize = itemStandardSize
@@ -74,7 +85,14 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
     public override func awakeFromNib() {
         super.awakeFromNib()
 
-        movementFunction = MovementFunction(startVelocity: startVelocity, startPosition: startPosition)
+        movementFunction = MovementFunction(
+            startVelocity: startVelocity,
+            startPosition: startPosition
+        )
+        scaleFunction = ScaleFunction(
+            contentOffsetOfParabolaVertex: movementFunction.contentOffsetOfParabolaVertex,
+            scaleAtVertex: scaleAtVertex
+        )
 
         contentOffsetBetweenItems = calculateContentOffsetBetweenItems()
         contentOffsetOfTopDisappearance = calculateContentOffsetOfTopDisappearance()
@@ -132,7 +150,7 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
 
         var layoutAttributesArray: [UICollectionViewLayoutAttributes] = []
         for itemPositionModel in itemPositionModels {
-            let scale = calculateScale(normalizedContentOffset: itemPositionModel.normalizedContentOffset)
+            let scale = scaleFunction.scale(for: itemPositionModel.normalizedContentOffset)
 
             let itemLayoutAttributes = UICollectionViewLayoutAttributes(
                 forCellWith: IndexPath(
@@ -160,10 +178,6 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
 
     private func normalizeContentOffset(_ contentOffset: CGFloat, forItemIndex index: Int) -> CGFloat {
         contentOffset - CGFloat(index) * contentOffsetBetweenItems
-    }
-
-    private func calculateScale(normalizedContentOffset: CGFloat) -> CGFloat {
-        1 - normalizedContentOffset / 2900
     }
 
     private func calculateContentOffsetBetweenItems() -> CGFloat {

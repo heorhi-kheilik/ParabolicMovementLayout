@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension ParabolicMovementCollectionViewLayout {
+internal extension ParabolicMovementCollectionViewLayout {
 
     struct MovementFunction {
 
