@@ -24,6 +24,8 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
     @IBInspectable private(set) public var itemStandardSize: CGSize = .zero
     @IBInspectable private(set) public var scaleAtVertex: CGFloat = .zero
 
+    public var fallbackCollectionViewHeight: CGFloat = .zero
+
     public override var collectionViewContentSize: CGSize {
         guard
             let collectionView,
@@ -54,7 +56,8 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
         amountOfItemsFromStartToTop: CGFloat,
         disappearanceTopItemOffset: CGFloat,
         itemStandardSize: CGSize,
-        scaleAtVertex: CGFloat
+        scaleAtVertex: CGFloat,
+        fallbackCollectionViewHeight: CGFloat
     ) {
         movementFunction = MovementFunction(
             startVelocity: startVelocity,
@@ -68,6 +71,8 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
         self.amountOfItemsFromStartToVertex = amountOfItemsFromStartToTop
         self.disappearanceTopItemOffset = disappearanceTopItemOffset
         self.itemStandardSize = itemStandardSize
+
+        self.fallbackCollectionViewHeight = fallbackCollectionViewHeight
 
         super.init()
 
@@ -193,7 +198,7 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
     }
 
     private func calculateContentOffsetOfBottomDisappearance() -> CGFloat {
-        guard let collectionViewHeight = collectionView?.bounds.height else { return .zero }
+        let collectionViewHeight = collectionView?.bounds.height ?? fallbackCollectionViewHeight
         let (contentOffsetAtBottomAppearance, _) = movementFunction.contentOffsets(for: collectionViewHeight)
         return contentOffsetAtBottomAppearance
     }
