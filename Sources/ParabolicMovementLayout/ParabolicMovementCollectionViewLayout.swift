@@ -18,7 +18,7 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
     @IBInspectable private(set) public var startVelocity: CGFloat = .zero
     @IBInspectable private(set) public var startPosition: CGFloat = .zero
 
-    @IBInspectable private(set) public var amountOfItemsFromStartToTop: CGFloat = .zero
+    @IBInspectable private(set) public var amountOfItemsFromStartToVertex: CGFloat = .zero
     @IBInspectable private(set) public var disappearanceTopItemOffset: CGFloat = .zero
 
     @IBInspectable private(set) public var itemStandardSize: CGSize = .zero
@@ -65,7 +65,7 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
             scaleAtVertex: scaleAtVertex
         )
 
-        self.amountOfItemsFromStartToTop = amountOfItemsFromStartToTop
+        self.amountOfItemsFromStartToVertex = amountOfItemsFromStartToTop
         self.disappearanceTopItemOffset = disappearanceTopItemOffset
         self.itemStandardSize = itemStandardSize
 
@@ -181,7 +181,7 @@ public final class ParabolicMovementCollectionViewLayout: ContentOffsetCollectio
     }
 
     private func calculateContentOffsetBetweenItems() -> CGFloat {
-        movementFunction.contentOffsetOfParabolaVertex / amountOfItemsFromStartToTop
+        movementFunction.contentOffsetOfParabolaVertex / amountOfItemsFromStartToVertex
     }
 
     private func calculateContentOffsetOfTopDisappearance() -> CGFloat {
