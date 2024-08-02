@@ -1,5 +1,3 @@
-Collection View Layout that moves items in a physically correct way.
-
 <img src="./Documentation/Assets/Demo.gif" width="270" height="595">
 
 ## Requirements
