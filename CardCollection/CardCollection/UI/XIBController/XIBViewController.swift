@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  XIBViewController.swift
 //  CardCollection
 //
 //  Created by Heorhi Heilik on 18.07.24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ViewController: UIViewController {
+final class XIBViewController: UIViewController {
 
     // MARK: IBOutlets
 
@@ -18,7 +18,6 @@ final class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureCollectionView()
-        configureShadow()
     }
 
     // MARK: Private methods
@@ -28,19 +27,18 @@ final class ViewController: UIViewController {
         collectionView.dataSource = self
     }
 
-    private func configureShadow() {
-        let shadowLayer = CALayer()
-        shadowLayer.backgroundColor = UIColor.black.cgColor
-        shadowLayer.opacity = 0.6
-        shadowLayer.frame = view.bounds
-        view.layer.insertSublayer(shadowLayer, below: collectionView.layer)
+    // MARK: IBActions
+
+    @IBAction
+    private func doneButtonTouchUpInside() {
+        dismiss(animated: true)
     }
 
 }
 
 // MARK: - UICollectionViewDataSource
 
-extension ViewController: UICollectionViewDataSource {
+extension XIBViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int { 20 }
 

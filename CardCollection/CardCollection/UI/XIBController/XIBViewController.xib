@@ -4,18 +4,19 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23077"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ViewController" customModule="CardCollection" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="XIBViewController" customModule="CardCollection" customModuleProvider="target">
             <connections>
                 <outlet property="collectionView" destination="AVh-rb-aYJ" id="aTy-qB-14Q"/>
                 <outlet property="view" destination="UOm-5l-rnO" id="fwT-Fk-cpV"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view autoresizesSubviews="NO" contentMode="scaleToFill" id="UOm-5l-rnO">
+        <view autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" id="UOm-5l-rnO">
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
@@ -69,18 +70,35 @@
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XU8-AE-xsI">
+                    <rect key="frame" x="299.66666666666669" y="268.66666666666669" width="61.333333333333314" height="32"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="filled" title="Done" cornerStyle="capsule">
+                        <fontDescription key="titleFontDescription" type="system" weight="semibold" pointSize="15"/>
+                    </buttonConfiguration>
+                    <connections>
+                        <action selector="doneButtonTouchUpInside" destination="-1" eventType="touchUpInside" id="ie4-Bb-ZJE"/>
+                    </connections>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="Xrm-FT-5xE"/>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" name="shadowBackground"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="AVh-rb-aYJ" secondAttribute="bottom" constant="-20" id="0ph-ni-1bV"/>
                 <constraint firstItem="AVh-rb-aYJ" firstAttribute="leading" secondItem="Xrm-FT-5xE" secondAttribute="leading" id="Asy-ri-tSA"/>
+                <constraint firstItem="Xrm-FT-5xE" firstAttribute="trailing" secondItem="XU8-AE-xsI" secondAttribute="trailing" constant="32" id="FWO-Wm-BE8"/>
                 <constraint firstAttribute="trailing" secondItem="AVh-rb-aYJ" secondAttribute="trailing" id="KRk-cw-0NB"/>
+                <constraint firstItem="qeZ-UD-aua" firstAttribute="firstBaseline" secondItem="XU8-AE-xsI" secondAttribute="firstBaseline" constant="2" id="NIN-sC-nNY"/>
                 <constraint firstItem="Xrm-FT-5xE" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="qeZ-UD-aua" secondAttribute="trailing" constant="32" id="bmt-cp-sO6"/>
                 <constraint firstItem="qeZ-UD-aua" firstAttribute="leading" secondItem="Xrm-FT-5xE" secondAttribute="leading" constant="32" id="o7X-Nb-Bdr"/>
                 <constraint firstItem="AVh-rb-aYJ" firstAttribute="top" secondItem="qeZ-UD-aua" secondAttribute="bottom" constant="24" id="pCg-rp-BbA"/>
             </constraints>
-            <point key="canvasLocation" x="138" y="42"/>
+            <point key="canvasLocation" x="136.64122137404578" y="41.549295774647888"/>
         </view>
     </objects>
+    <resources>
+        <namedColor name="shadowBackground">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
 </document>

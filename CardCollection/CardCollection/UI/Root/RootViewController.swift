@@ -30,7 +30,10 @@ extension RootViewController: @preconcurrency RootViewDelegate {
     }
 
     func xibImplementationTouchUpInside() {
-        print("xib")
+        let controller = XIBViewController()
+        controller.modalPresentationStyle = .overFullScreen
+        controller.modalTransitionStyle = .crossDissolve
+        present(controller, animated: true)
     }
 
 }
