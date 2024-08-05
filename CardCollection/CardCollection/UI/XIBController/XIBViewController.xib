@@ -85,7 +85,7 @@
             <color key="backgroundColor" name="shadowBackground"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="AVh-rb-aYJ" secondAttribute="bottom" constant="-20" id="0ph-ni-1bV"/>
-                <constraint firstItem="AVh-rb-aYJ" firstAttribute="leading" secondItem="Xrm-FT-5xE" secondAttribute="leading" id="Asy-ri-tSA"/>
+                <constraint firstItem="AVh-rb-aYJ" firstAttribute="leading" secondItem="UOm-5l-rnO" secondAttribute="leading" id="Asy-ri-tSA"/>
                 <constraint firstItem="Xrm-FT-5xE" firstAttribute="trailing" secondItem="XU8-AE-xsI" secondAttribute="trailing" constant="32" id="FWO-Wm-BE8"/>
                 <constraint firstAttribute="trailing" secondItem="AVh-rb-aYJ" secondAttribute="trailing" id="KRk-cw-0NB"/>
                 <constraint firstItem="qeZ-UD-aua" firstAttribute="firstBaseline" secondItem="XU8-AE-xsI" secondAttribute="firstBaseline" constant="2" id="NIN-sC-nNY"/>
@@ -98,7 +98,7 @@
     </objects>
     <resources>
         <namedColor name="shadowBackground">
-            <color red="0.0" green="0.0" blue="0.0" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.60000002384185791" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

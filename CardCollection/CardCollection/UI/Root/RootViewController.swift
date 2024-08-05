@@ -26,7 +26,10 @@ final class RootViewController: UIHostingController<RootView> {
 extension RootViewController: @preconcurrency RootViewDelegate {
 
     func programmaticImplementationTouchUpInside() {
-        print("progammatic")
+        let controller = ProgrammaticViewController()
+        controller.modalPresentationStyle = .overFullScreen
+        controller.modalTransitionStyle = .crossDissolve
+        present(controller, animated: true)
     }
 
     func xibImplementationTouchUpInside() {
