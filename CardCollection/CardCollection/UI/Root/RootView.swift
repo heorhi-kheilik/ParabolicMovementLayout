@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 protocol RootViewDelegate: AnyObject {
     func programmaticImplementationTouchUpInside()
     func xibImplementationTouchUpInside()

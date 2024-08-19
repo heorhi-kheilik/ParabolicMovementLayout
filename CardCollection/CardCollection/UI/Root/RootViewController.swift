@@ -23,7 +23,7 @@ final class RootViewController: UIHostingController<RootView> {
 
 // MARK: - RootViewDelegate
 
-extension RootViewController: @preconcurrency RootViewDelegate {
+extension RootViewController: RootViewDelegate {
 
     func programmaticImplementationTouchUpInside() {
         let controller = ProgrammaticViewController()
