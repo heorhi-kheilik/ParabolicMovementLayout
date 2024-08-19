@@ -50,7 +50,6 @@ final class ProgrammaticViewController: UIViewController {
         label.text = "Choose card"
         label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
         label.textColor = .white
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
