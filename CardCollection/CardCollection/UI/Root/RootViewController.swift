@@ -10,6 +10,8 @@ import UIKit
 
 final class RootViewController: UIHostingController<RootView> {
 
+    // MARK: Initialization
+
     init() {
         super.init(rootView: RootView())
         rootView.delegate = self
@@ -18,12 +20,23 @@ final class RootViewController: UIHostingController<RootView> {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
+    // MARK: Internal methods
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationItem.title = "Choose Implementation"
+    }
+
 }
 
 // MARK: - RootViewDelegate
 
 extension RootViewController: RootViewDelegate {
+
+    func realExampleTouchUpInside() {
+        // TODO: implement
+    }
 
     func programmaticImplementationTouchUpInside() {
         let controller = ProgrammaticViewController()
