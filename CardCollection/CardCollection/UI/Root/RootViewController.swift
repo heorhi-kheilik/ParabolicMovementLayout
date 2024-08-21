@@ -23,8 +23,8 @@ final class RootViewController: UIHostingController<RootView> {
 
     // MARK: Internal methods
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         navigationItem.title = "Choose Implementation"
     }
 
@@ -35,7 +35,7 @@ final class RootViewController: UIHostingController<RootView> {
 extension RootViewController: RootViewDelegate {
 
     func realExampleTouchUpInside() {
-        // TODO: implement
+        navigationController?.pushViewController(RealExampleViewController(), animated: true)
     }
 
     func programmaticImplementationTouchUpInside() {
