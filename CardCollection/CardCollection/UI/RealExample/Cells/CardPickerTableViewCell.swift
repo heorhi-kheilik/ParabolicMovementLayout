@@ -5,9 +5,10 @@
 //  Created by Heorhi Heilik on 21.08.24.
 //
 
+import ReusableKit
 import UIKit
 
-final class CardPickerTableViewCell: UITableViewCell {
+final class CardPickerTableViewCell: UITableViewCell, NibInstantiatable {
 
     // MARK: Constants
 
