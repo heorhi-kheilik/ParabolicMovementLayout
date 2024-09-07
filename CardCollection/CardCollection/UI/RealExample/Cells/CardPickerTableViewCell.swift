@@ -12,9 +12,8 @@ final class CardPickerTableViewCell: UITableViewCell, NibInstantiatable {
 
     // MARK: Constants
 
-    private enum Colors {
-        static let pinkColor = UIColor(named: "pinkGradient")!
-        static let blueColor = UIColor(named: "blueGradient")!
+    private enum Constants {
+        static let cornerRadius: CGFloat = 4
     }
 
     // MARK: IBOutlets
@@ -24,33 +23,38 @@ final class CardPickerTableViewCell: UITableViewCell, NibInstantiatable {
     @IBOutlet private weak var cardNumberLabel: UILabel!
     @IBOutlet private weak var cardNameLabel: UILabel!
 
+    // MARK: Internal properties
+
+    private(set) var cardModel: CardModel?
+
     // MARK: Internal methods
 
-    func configure(cardNumber: String, cardName: String) {
-        cardNumberLabel.text = cardNumber
-        cardNameLabel.text = cardName
+    func configure(cardModel: CardModel) {
+        cardNumberLabel.text = cardModel.number
+        cardNameLabel.text = cardModel.name
+
+        cardView.layer.sublayers?.removeAll { $0 is CAGradientLayer }
+        setGradient(ofType: cardModel.gradientType)
+
+        self.cardModel = cardModel
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        let gradientLayer = createGradient(in: cardView.bounds)
         cardView.layer.sublayers?.removeAll { $0 is CAGradientLayer }
-        cardView.layer.insertSublayer(gradientLayer, at: 0)
+        if let gradientType = cardModel?.gradientType {
+            setGradient(ofType: gradientType)
+        }
     }
 
     // MARK: Private methods
 
-    private func createGradient(in frame: CGRect) -> CAGradientLayer {
-        let layer = CAGradientLayer()
-        layer.colors = [
-            Colors.pinkColor.cgColor,
-            Colors.blueColor.cgColor
-        ]
-        layer.frame = frame
-        layer.cornerRadius = 4
-        layer.startPoint = .init(x: 0, y: 0)
-        layer.endPoint = .init(x: 1, y: 1)
-        return layer
+    private func setGradient(ofType type: GradientProvider.GradientType) {
+        cardView.layer.sublayers?.removeAll { $0 is CAGradientLayer }
+        let gradientLayer = GradientProvider.gradient(ofType: type)
+        gradientLayer.frame = cardView.bounds
+        gradientLayer.cornerRadius = Constants.cornerRadius
+        cardView.layer.insertSublayer(gradientLayer, at: 0)
     }
 
 }

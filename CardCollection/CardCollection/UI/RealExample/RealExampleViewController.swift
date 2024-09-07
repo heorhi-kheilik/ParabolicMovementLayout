@@ -85,14 +85,12 @@ extension RealExampleViewController: UITableViewDataSource {
         switch (indexPath.section, indexPath.row) {
         case (0, 0):
             return tableView.dequeueReusableCell(CardPickerTableViewCell.self, for: indexPath) { cell in
-                let last4Digits = IndexPathFormatter.last4Digits(for: sourceIndexPath)
-                cell.configure(cardNumber: "4422 **** **** \(last4Digits)", cardName: "Default")
+                cell.configure(cardModel: CardModel.cards[sourceIndexPath.row])
             }
 
         case (0, 1):
             return tableView.dequeueReusableCell(CardPickerTableViewCell.self, for: indexPath) { cell in
-                let last4Digits = IndexPathFormatter.last4Digits(for: targetIndexPath)
-                cell.configure(cardNumber: "4422 **** **** \(last4Digits)", cardName: "Default")
+                cell.configure(cardModel: CardModel.cards[targetIndexPath.row])
             }
 
         case (1, 0):
