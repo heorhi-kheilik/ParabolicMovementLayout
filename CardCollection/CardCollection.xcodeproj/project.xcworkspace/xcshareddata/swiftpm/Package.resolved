@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "ReusableKit",
+        "repositoryURL": "https://github.com/heorhi-kheilik/ReusableKit",
+        "state": {
+          "branch": null,
+          "revision": "a6f4030eea1409c900a2766bd319eea960b84978",
+          "version": "0.2.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
