@@ -9,6 +9,7 @@ import SwiftUI
 
 @MainActor
 protocol RootViewDelegate: AnyObject {
+    func realExampleTouchUpInside()
     func programmaticImplementationTouchUpInside()
     func xibImplementationTouchUpInside()
 }
@@ -18,24 +19,30 @@ struct RootView: View {
     weak var delegate: RootViewDelegate?
 
     var body: some View {
-        NavigationView {
-            Form {
-                Section {
-                    Button {
-                        delegate?.programmaticImplementationTouchUpInside()
-                    } label: {
-                        Text("Programmatic")
-                    }
-
-                    Button {
-                        delegate?.xibImplementationTouchUpInside()
-                    } label: {
-                        Text("XIB")
-                    }
+        Form {
+            Section {
+                Button {
+                    delegate?.realExampleTouchUpInside()
+                } label: {
+                    Text("Real Example")
                 }
             }
-            .navigationTitle("Choose Implementation")
-            .navigationBarTitleDisplayMode(.inline)
+
+            Section {
+                Button {
+                    delegate?.programmaticImplementationTouchUpInside()
+                } label: {
+                    Text("Programmatic")
+                }
+
+                Button {
+                    delegate?.xibImplementationTouchUpInside()
+                } label: {
+                    Text("XIB")
+                }
+            } header: {
+                Text("Implementations")
+            }
         }
     }
 

@@ -1,22 +1,24 @@
 //
-//  CardCollectionViewCell.swift
+//  CardPickerTableViewCell.swift
 //  CardCollection
 //
-//  Created by Heorhi Heilik on 23.07.24.
+//  Created by Heorhi Heilik on 21.08.24.
 //
 
 import ReusableKit
 import UIKit
 
-final class CardCollectionViewCell: UICollectionViewCell, NibInstantiatable {
+final class CardPickerTableViewCell: UITableViewCell, NibInstantiatable {
 
     // MARK: Constants
 
     private enum Constants {
-        static let cornerRadius: CGFloat = 8
+        static let cornerRadius: CGFloat = 4
     }
 
     // MARK: IBOutlets
+
+    @IBOutlet private weak var cardView: UIView!
 
     @IBOutlet private weak var cardNumberLabel: UILabel!
     @IBOutlet private weak var cardNameLabel: UILabel!
@@ -31,7 +33,7 @@ final class CardCollectionViewCell: UICollectionViewCell, NibInstantiatable {
         cardNumberLabel.text = cardModel.number
         cardNameLabel.text = cardModel.name
 
-        contentView.layer.sublayers?.removeAll { $0 is CAGradientLayer }
+        cardView.layer.sublayers?.removeAll { $0 is CAGradientLayer }
         setGradient(ofType: cardModel.gradientType)
 
         self.cardModel = cardModel
@@ -39,7 +41,7 @@ final class CardCollectionViewCell: UICollectionViewCell, NibInstantiatable {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        contentView.layer.sublayers?.removeAll { $0 is CAGradientLayer }
+        cardView.layer.sublayers?.removeAll { $0 is CAGradientLayer }
         if let gradientType = cardModel?.gradientType {
             setGradient(ofType: gradientType)
         }
@@ -48,11 +50,11 @@ final class CardCollectionViewCell: UICollectionViewCell, NibInstantiatable {
     // MARK: Private methods
 
     private func setGradient(ofType type: GradientProvider.GradientType) {
-        contentView.layer.sublayers?.removeAll { $0 is CAGradientLayer }
+        cardView.layer.sublayers?.removeAll { $0 is CAGradientLayer }
         let gradientLayer = GradientProvider.gradient(ofType: type)
-        gradientLayer.frame = contentView.bounds
+        gradientLayer.frame = cardView.bounds
         gradientLayer.cornerRadius = Constants.cornerRadius
-        contentView.layer.insertSublayer(gradientLayer, at: 0)
+        cardView.layer.insertSublayer(gradientLayer, at: 0)
     }
 
 }

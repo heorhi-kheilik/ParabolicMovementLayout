@@ -111,10 +111,7 @@ extension ProgrammaticViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         collectionView.dequeueReusableCell(CardCollectionViewCell.self, for: indexPath) { cell in
-            var last4Digits = String(indexPath.row)
-            let zeroesToPrependCount = max(0, 4 - last4Digits.count)
-            last4Digits = String(repeating: "0", count: zeroesToPrependCount) + last4Digits
-            cell.configure(cardNumber: "4422 **** **** \(last4Digits)", cardName: "Default")
+            cell.configure(cardModel: CardModel.cards[indexPath.item])
         }
     }
 
