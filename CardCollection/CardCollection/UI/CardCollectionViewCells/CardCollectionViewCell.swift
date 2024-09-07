@@ -5,9 +5,10 @@
 //  Created by Heorhi Heilik on 23.07.24.
 //
 
+import ReusableKit
 import UIKit
 
-final class CardCollectionViewCell: UICollectionViewCell {
+final class CardCollectionViewCell: UICollectionViewCell, NibInstantiatable {
 
     // MARK: Constants
 
