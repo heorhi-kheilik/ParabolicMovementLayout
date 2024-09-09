@@ -1,4 +1,6 @@
-<img src="./Documentation/Assets/Demo.gif" width="270" height="595">
+<p align="center">
+<img width="819" alt="Presentation" src="https://github.com/user-attachments/assets/39fdb5df-f808-4008-a3f6-6a85c17e2ea8">
+</p>
 
 ## Requirements
 
@@ -12,8 +14,8 @@ This repository can be installed via Swift Package Manager.
 ```swift
 dependencies: [
     .package(
-        url: "https://github.com/heheilik/ParabolicMovementLayout.git",
-        .upToNextMajor(from: "1.0.0")
+        url: "https://github.com/heorhi-kheilik/ParabolicMovementLayout.git",
+        .upToNextMajor(from: "1.1.0")
     )
 ]
 ```
@@ -58,7 +60,9 @@ To define a movement function, we need to define `startVelocity` and `startPosit
 
 Let `startVelocity = -1`, `startPosition = 290`:
 
-![](./Documentation/Assets/ParabolicMovementGraph.png)
+<p align="center">
+<img width="819" alt="ParabolicMovementGraph" src="https://github.com/user-attachments/assets/b7fd74c8-bbe6-4daf-8583-baeb8431f1e9">
+</p>
 
 Layout generates the function with three important properties:
 - The movement is actually inverted relative to $y$-axis, because $y$-axis is inverted in UIKit.
